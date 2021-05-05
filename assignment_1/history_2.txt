@@ -1,0 +1,20 @@
+  117  git rm Makefile
+  118  rm Makefile
+  119  ls
+  120  vim Makefile
+  121  make
+  122  ./main
+  123  vim history_1.txt
+  124  git add Makefile
+  125  git commit -m "Makefile"
+  126  git add main.c,average.c,average.h
+  127  pwd
+  128  ls
+  129  git add main.c, average.c, average.h
+  130  git add main.c
+  131  git add average.c
+  132  git add average.h
+  133  git commit -m ".c and .h files"
+  134  git log
+  135  vim history_1.txt
+  136  history | tail -n 20 > history_2.txt
