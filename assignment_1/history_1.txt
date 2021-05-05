@@ -1,0 +1,25 @@
+   20  git remote add origin https://github.com/jessica-patel/CTA200.git
+   21  cd CTA200
+   22  pwd
+   23  ls
+   24  ls -la
+   25  echo "# CTA200" >> README.md
+   26  git add README.md
+   27  vim README.md
+   28  git commit -m "README.md"
+   29  git config --global user.name "Jessica"
+   30  git config --global user.email jessica_patel9@hotmail.com
+   31  git commit -m "README.md"
+   32  git log
+   33  echo "$ CTA200" >> LICENSE.txt
+   34  git add LICENSE.txt
+   35  vim LICENSE.txt
+   36  git commit -m "LICENSE"
+   37  pwd
+   38  mkdir assignment_1
+   39  pwd
+   40  cd assignment_1
+   41  pwd
+   42  history | tail -n 25
+   43  pwd
+   44  history | tail -n 25 > history_1.txt
