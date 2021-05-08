@@ -1,0 +1,110 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{ amssymb }
+\usepackage{listings}
+\usepackage[toc,page]{appendix}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{mwe}
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\title{CTA200: Assignment 2}
+\author{Jessica Patel}
+\date{May 8, 2021}
+
+\begin{document}
+
+\maketitle
+
+This write-up contains my methods and analysis for each question in Assignment 2.
+\section{Question 1}
+\subsection{Methods}
+First, functions were defined for the equations of the first and second numerical approximation methods. A variety of h values were arbitrarily chosen between 0 and 1, with a step size of 0.1. The equations were iterated for these $h$ values, giving the rounded derivative approximation values shown in Table 1.
+
+\begin{table}[h]
+\centering
+
+\begin{tabular}{l|lcr}
+h values & Method 1 & Method 2\\
+\hline
+0.1 &0.9884 & 0.9933 \\
+0.2 & 0.9784&0.9884 \\
+0.3 & 0.9653&  0.9801\\
+0.4 & 0.9490& 0.9687\\
+0.5 &  0.9296& 0.9541\\
+0.6 & 0.9073&   0.9157\\
+0.7 & 0.8822& 0.9364\\
+0.8 & 0.8544& 0.8922 \\
+0.9 & 0.8240& 0.8660\\
+\hline
+\end{tabular}
+
+\caption{Approximate derivative values over h for both methods.}
+\end{table}
+
+The error compared to the analytical derivative was then calculated for both methods by subtracting the analytical derivative from the numerical derivative and then dividing by the analytical derivative. By iterating over the various $h$ values, Figure 1 was found.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Q1.pdf}
+\caption{Comparing the errors of the numerical approximations to the analytical derivative for both methods.}
+\end{center}
+\end{figure}
+
+\subsection{Analysis}
+It can be observed from Table 1 that the derivative values get smaller as the step size h increases. Furthermore, the first method appears to have smaller derivative values than the second method for all $h$ values. Considering that the analytical derivative at $x_0 = 0.1$ is $\cos(0.1) \simeq 0.995$, it can be concluded that the second method provides a closer, and thus more accurate approximation of the derivative than the first method.
+
+Considering Figure 1, it can be seen that the slope of the first method slightly increases, whereas the slope of the second method stays constant, showing a straight line. The slope for this plot represents the increase in the log of error over the log of step size. Putting the plot in a log scale allows for better comparison of the slopes since they would normally be curved lines, which are harder to compare. Since the first method appears to be slightly curved in Figure 1, this shows that the derivative approximation using method 1 diverges away from the true value at a quicker rate as the step size $h$ increases.
+\section{Question 2}
+\subsection{Methods}
+First, a function was written to compute and save the iterations of the $z_{i+1} = z_i^2 + c$ equation. This function was made to iterate until a given limit of iterations, or to a limit of the size of iterations. This was done to stop the iterations when enough information is found. In this case, the limit of iterations was chosen to be $20$ since that would provide enough iterations to get an idea of whether the point diverges or not, because if it does, it tends to diverge quickly. A limit on the size of the iterations was chosen to be $1 \times 10^{20}$ so that once the iterations reach this size, it is known that it will diverge, and so less work can be done.
+
+Next, the points were classified as bounded or diverging points by checking if the absolute values of the iterations ever increase past a value of $2$. This value was chosen since one of the basic properties of the Mandelbrot set is that the values are bounded within a disk of radius two from the origin. Figure 2 shows the classification of the points.
+
+Then, the iteration number at which the points diverged was found by making the limit of the iteration size to be $2$, and finding the number of iterations it takes to pass this limit. Figure 3 shows the colour map showing the number of iterations for the various points. It should be noted that the iterations were capped at $20$, so the bounded points seem to correspond to $20$ iterations, but would never actually diverge.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Q2_1.pdf}
+\caption{Differentiating between diverging and bounded points.}
+\end{center}
+\end{figure}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Q2_2.pdf}
+\caption{Differentiating between number of iterations it takes to diverge.}
+\end{center}
+\end{figure}
+
+\subsection{Analysis}
+For Figure 2, it shows that the bounded points are mostly near the origin and it shows a symmetrical pattern over the x-axis. Figure 3 shows that the number of iterations it takes for the points to diverge decreases as the distance from the origin increases.
+
+\section{Question 3}
+\subsection{Methods}
+For this question, the SIR model for disease spread was evaluated using $scipy.integrate$ as in the lecture example. The $\beta$ and $\gamma$ values were chosen by keeping $\beta$ greater than $\gamma$ by the same amount, while decreasing both parameters by the same amount. These values were chosen because it was noticed that when both parameters were made equal, or $\gamma$ was made larger than $\beta$, the results did not make sense since it would show that all curves are constant, and the infection and recovered curves would be near or equal to zero over time, which does not provide any information about disease spread. Furthermore, the difference between $\beta$ and $\gamma$  was chosen arbitrarily, but they were decreased to observe the pattern. The values for these parameters were chosen between $0$ and $1$. This is because, looking at the differential equations, it can be deduced that $\beta$ and $\gamma$ represent some fraction of the susceptible, infected and recovered populations. Figures 4, 5 and 6 show these curves for the various $\beta$ and $\gamma$ values.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Q3_[0.8, 0.5].pdf}
+\caption{SIR model for larger $\beta$ and $\gamma$ values.}
+\end{center}
+\end{figure}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Q3_[0.6, 0.3].pdf}
+\caption{SIR model for medium $\beta$ and $\gamma$ values.}
+\end{center}
+\end{figure}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.5]{Q3_[0.4, 0.1].pdf}
+\caption{SIR model for smaller $\beta$ and $\gamma$ values.}
+\end{center}
+\end{figure}
+\subsection{Analysis}
+ It can be observed from the figures that, as the $\beta$ and $\gamma$ values decrease, the infected curve has a larger bump and the susceptible and infected curves reach lower and higher amounts of people, respectively. This makes sense, because as $\gamma$ decreases, the number of recovered people decreases. Due to this definition, it is expected for the amount of infected people to hit a larger number. It is also expected for the number of susceptible people to decrease and for the amount of infected people to increase.
+
+\end{document}
