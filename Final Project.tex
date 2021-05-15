@@ -1,0 +1,146 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1.0in]{geometry}
+
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{ amssymb }
+\usepackage{listings}
+\usepackage[toc,page]{appendix}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{mwe}
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\usepackage{wasysym}
+\usepackage{ marvosym }
+\usepackage{amsmath}
+
+\title{CTA200: Tidal Evolution of the Earth-Moon System}
+\author{Jessica Patel}
+\date{Friday, May 14th, 2021}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Ocean tides on Earth are caused by the gravitational attraction of the Moon and the Sun. The gravitational forces act on the tidal bulge in Earth's oceans and the solid body of the Earth, producing tidal torque. The lunar tidal torque decreases the spin angular momentum of the Earth, $S_{\oplus}$, and increases the orbital angular momentum of the Moon, $L_{\leftmoon}$. This increases the length of day, and decreases the length of the lunar month. Due to the conservation of angular momentum, this gives the relationship for the total angular momentum of the Earth-Moon system given by Equation 1. The solar tidal torque decreases $S_{\oplus}$ as well, but to a lower extent. Considering conservation of angular momentum in the Earth-Moon-Sun system, this new relationship would be given by Equation 2. Since the solar tidal torque decreases $S_\oplus$, then orbital angular momentum of Earth, $L_{\oplus}$, must increase since it slightly decreases $L_{EM}$. 
+\begin{eqnarray}
+L_{EM} = S_{\oplus} + L_{\leftmoon} \\
+L_{total} = L_{EM} + L_{\oplus} =  S_{\oplus} + L_{\leftmoon} + L_{\oplus}
+\end{eqnarray}
+These relationships between the various angular momenta and the tidal torques give rise to the following first-order ordinary differential equations.
+\begin{eqnarray}
+\frac{dL_{\oplus}}{dt} = T_{\odot} \\
+\frac{dS_{\oplus}}{dt} = - T_{\odot} - T_{\leftmoon} \\
+\frac{dL_{\leftmoon}}{dt} = T_{\leftmoon}
+\end{eqnarray}
+The goal of this project is to evaluate how the angular momenta of the Earth and the Moon changed over time, to ultimately solve the problem of determining the Moon's age. This is done by integrating the evolution of the Earth-Moon system from the present-day configuration to the past to determine when the Earth-Moon separation went to zero, and hence, when the Earth and Moon formed. 
+
+\section{Procedure and Results}
+\subsection{Calculating Parameters}
+The python script accomplishes this goal by first calculating the initial, or present day, values for the various angular momenta parameters and the tidal torque parameters. This was done using the following set of equations.
+
+\begin{eqnarray}
+L_{\oplus} = M_{\oplus} \sqrt{G(M_{\odot}+M_{\oplus})a_{\oplus}} \\
+S_{\oplus} = I\Omega_{\oplus} \\
+L_{\leftmoon} = m_{\leftmoon} \sqrt{G(M_{\oplus}+m_{\leftmoon})a_{\leftmoon}} \\
+T_{\leftmoon} = \frac{3}{2} \frac{Gm_{\leftmoon}^2}{a_{\leftmoon}} \left(\frac{R_{\oplus}}{a_{\leftmoon}}\right)^5 \frac{k_2}{Q_{\leftmoon}} \\
+T_\odot = T_{\leftmoon} \beta = T_{\leftmoon} \frac{1}{4.7} \left(\frac{a_{\leftmoon}}{a_{\leftmoon}(0)} \right)^6
+\end{eqnarray}
+Next, the timescales associated with equations (3), (4) and (5) were calculated by considering a timescale $\tau$ instead of the infinitesimal time step $dt$. These calculated values are given in Table 1. 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|lcr}
+\textbf{Parameter} & \textbf{Calculated Value}\\
+\hline
+L_{\oplus}(0)& 2.6483 \times 10^{47} \ \text{g cm2/s} \\
+\hline
+S_{\oplus}(0)& 5.8294 \times 10^{40} \ \text{g cm2/s}\\
+\hline
+L_{\leftmoon}(0) & 2.9082 \times 10^{41} \ \text{g cm2/s} \\
+\hline
+T_{\leftmoon} & 4.2745 \times 10^{23} \ \text{dynes}\\
+\hline
+T_{\oplus} & 9.0946 \times 10^{22} \ \text{dynes}\\
+\hline
+\tau_{L_{\oplus}}}& 9.2336 \times 10^{16} \ \text{years}\\
+\hline
+\tau_{S_{\oplus}}} & 3.5658 \times 10^{9} \ \text{years}\\
+\hline
+\tau_{L_{\leftmoon}}}& 2.1574 \times 10^{10} \ \text{years} \\
+\hline
+\end{tabular}
+
+\caption{Calculated values rounded to 4 decimal places. Exact values are given in the code.}
+\end{table}
+
+\subsection{Integrating differential equations}
+To integrate equations (3), (4) and (5), a function was first created to return the right hand sides of each equation. This was done by writing the tidal torques in terms of $a_\leftmoon$, and by solving for $a_\leftmoon$ using equation (8). 
+
+Then, the $\texttt{scipy.integrate.solve\_ivp()}$ function was used to solve the differential equations. The initial values for the angular momenta were inputted, and $1 \times 10^{7}$ samples of time were used since this amount allowed for the maximum amount of information to be collected within the capabilities of the computer processor. 
+
+The solutions for the angular momenta parameters were then plotted, as shown in Figures 1 (a) and (b). It can be seen that Earth's orbital angular momentum stays mostly constant since it only shows variation on a very small scale. From Figure 2 (b), it can be observed that curves have the same rates of change, but opposite signs. They also start off with rapid rates of change and then start to flatten over time. This is expected since the Earth and Moon exchange angular momentum, which is mostly conserved.
+
+\begin{figure*}[h]
+        \centering
+        \begin{subfigure}[b]{0.47\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{LE.pdf}
+            \caption[]%
+            {{\small }}    
+            \label{fig:mean and std of net14}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.48\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{SE_LM.pdf}
+            \caption[]%
+            {{\small }}    
+        \end{subfigure}
+        \caption[]%
+        {\small (a) Earth's orbital angular momentum plotted within small vertical limits to show limited change. (b) Earth's spin angular momentum with Moon's orbital angular momentum plotted over each other to show the dependent behaviour and conservation (mostly).} 
+    \end{figure*}
+
+After, it was investigated whether these solutions follow the conservation of angular momentum. The error within the total angular momentum of the Earth-Moon-Sun system was first calculated by adding all three angular momenta, and subtracting this total for a given time by the total in the present day, and dividing that by the total for a given time. This returned an array of the form $\texttt{[0.0000e+00 ...  7.8119e-15]}$, showing that the error is quite minimal and close to the size of the relative and absolute error tolerances. 
+
+Furthermore, for the Earth-Moon system, it is not expected for the total angular momentum to be conserved due to the interference of the Sun's gravitational attraction, and thus the fractional change was calculated in the same manner as before, but only taking the sum of $S_{\oplus}$ and $L_{\leftmoon}$. This returned an array of the form $\texttt{[0.0000e+00 ... 1.3450e-02]}$, showing that the fractional change is minimal but cannot be neglected.
+
+$\ $
+
+$\ $
+
+\subsection{Using solutions to evaluate other parameters}
+Using the solutions of the angular momenta, the lunar semi-major axis was solved for using equation (8) again and was plotted over time, as shown in Figure 2 (a). The length of an Earth day over time was also found using equation (7) to solve for $\Omega_{\oplus}$ and using the relation $\Omega_\oplus = 2 \pi / lod $ to solve for the length of day, $lod$. This was also plotted, as shown in Figure 2 (b). It can be seen that both graphs display asymptotic behaviour near $\sim -1.6 \ \text{My}$ and the rate of change decreases as both curves reach higher age values. The lunar semi-major axis starts to flatten while the length of Earth days appears to approach linear growth.
+
+\begin{figure*}[h]
+        \centering
+        \begin{subfigure}[b]{0.47\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{a_m.pdf}
+            \caption[]%
+            {{\small }}    
+            \label{fig:mean and std of net14}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.48\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{lod.pdf}
+            \caption[]%
+            {{\small }}    
+        \end{subfigure}
+        \caption[]%
+        {\small (a) Lunar semi-major axis in kilometers with a marker for the Roche radius aligned with the asymptotic behaviour of the curve. (b) Length of Earth day going back in time.} 
+    \end{figure*}
+
+Figure 2 (a) also shows a marker for the Earth-Moon Roche radius of $6378.1370 \ \text{km}$, since it is believed that the Moon formed at this distance. The curve stops before the Roche radius since a larger amount of samples could not be taken. Furthermore, since the Roche radius is relative to the center of the Earth while the semi-major axis is relative to the barycenter of the system, the Roche radius is quite small since the distance between the barycenter and center of the Earth of $4670 \ \text{km}$ must be subtracted. Considering that the curve follows asymptotic behaviour, it can be assumed that the Moon was at the Roche radius at a time slightly earlier than this model provides. This suggests that, even though Figure 2 (b) suggests that the length of an Earth day was about $5 \ \text{hours}$, it must have been even shorter.
+
+Since this tidal model results in curves that stop or become asymptotic at an age of $-1.6615 \ \text{gigayears}$, this suggests that the Moon is $1.6615 \ \text{gigayears}$ old. This value is of a similar degree as the timescales calculated earlier.
+
+\section{Analysis}
+The goal of determining when the Moon formed was accomplished. The main results are that the Earth's orbital angular momentum stays mostly constant, that the Earth's spin angular momentum and the Moon's orbital angular momentum show the same behaviour but with opposite signs since they are mostly conserved, and that the semi-major axis and the length of Earth days are both increasing.
+
+Considering that the theoretical values of the ages of the Earth and Moon are $4.543 \ \text{Gigayears}$ and $4.425 \ \text{Gigayears}$ respectively, it is clear that the this model significantly underestimates the ages and does not account for the difference in ages between the two astronomical bodies. 
+
+This underestimation is likely caused by the fact that this model does not account for tidally induced energy dissipation that occurs due to the friction created in the interior of Earth and in the oceans from the orbital and rotational energy. This reduces the spin orbital angular momentum of Earth, and thus increases the orbital angular momentum of the Moon. This leads to a larger semi-major axis, and thus an older age of the Moon since it takes the Moon a longer time to reach the Roche radius.
+\end{document}
